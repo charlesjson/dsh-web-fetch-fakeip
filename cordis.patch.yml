@@ -1,0 +1,11 @@
+# Disable the stock row, then insert a replacement retaining provider id: http.
+# Patch "name" is a match guard, so it cannot rename the stock row.
+# Deselecting this bundle restores the built-in implementation.
+- id: web-fetch-http
+  disabled: true
+- insert:
+    - id: web-fetch-fakeip
+      name: dsh-web-fetch-fakeip/runtime
+      config:
+        dohUrl: https://dns.alidns.com/resolve
+        dnsTimeoutMs: 8000
