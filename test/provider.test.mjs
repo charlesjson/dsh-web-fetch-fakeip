@@ -18,9 +18,12 @@ mock.module('undici', {
   namedExports: {
     Agent,
     fetch: async (url, init) => {
-      const addresses = await new Promise((resolve, reject) => {
-        init.dispatcher.options.connect.lookup(url.hostname, { all: true }, (err, result) => err ? reject(err) : resolve(result))
-      })
+      // DSH 0.2.2's stock provider uses the process-wide dispatcher; our
+      // fake-IP provider still supplies a per-request pinned lookup.
+      const lookup = init.dispatcher?.options?.connect?.lookup
+      const addresses = lookup ? await new Promise((resolve, reject) => {
+        lookup(url.hostname, { all: true }, (err, result) => err ? reject(err) : resolve(result))
+      }) : undefined
       requests.push({ url: String(url), addresses, init })
       return respond(url, init)
     },
@@ -44,11 +47,11 @@ function provider({ answers, systemLookup, dnsFetch, pdfOptions, ...overrides } 
   return new PdfFetchProvider({ ...limits, ...overrides }, resolver, { ...DEFAULT_PDF_OPTIONS, ...pdfOptions })
 }
 
-test('reproduces the stock PDF content-type failure and fixes it in the same single request', async () => {
+test('current stock fetcher rejects PDF while the plugin extracts it in a single request', async () => {
   requests.length = 0
   respond = () => new Response(makePdf(['Readable PDF text']), { headers: { 'content-type': 'application/pdf' } })
-  const old = new HttpFetchProvider(limits, async () => [{ address: '93.184.216.34', family: 4 }])
-  await assert.rejects(old.fetch({ url: 'https://example.com/doc.pdf' }), { code: 'WEB_UNSUPPORTED_CONTENT_TYPE' })
+  const stock = new HttpFetchProvider(limits)
+  await assert.rejects(stock.fetch({ url: 'https://example.com/doc.pdf' }), { code: 'WEB_UNSUPPORTED_CONTENT_TYPE' })
   requests.length = 0
   const result = await provider().fetch({ url: 'https://example.com/doc.pdf' })
   assert.equal(requests.length, 1); assert.equal(result.body.kind, 'text')
@@ -88,7 +91,7 @@ test('overall timeout covers a stalled PDF response body', async () => {
   finally { clearTimeout(keepAlive) }
 })
 
-test('actual upstream fetcher pins DoH addresses and preserves the URL hostname', async () => {
+test('plugin fetcher pins DoH addresses and preserves the URL hostname', async () => {
   requests.length = 0
   respond = () => new Response('hello', { headers: { 'content-type': 'text/plain' } })
   const result = await provider().fetch({ url: 'https://example.com/page' })

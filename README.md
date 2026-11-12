@@ -1,6 +1,6 @@
 # DeepSeek Harness WebFetch fake-IP 与 PDF 文本插件
 
-适配 **DeepSeek Harness 0.2.1-rc.2**。解决 OpenWrt / OpenClash / Mihomo 的
+适配 **DeepSeek Harness 0.2.2-rc.1**。解决 OpenWrt / OpenClash / Mihomo 的
 `198.18.0.0/15` 和 `fdfe:dcba:9876::/64` fake-IP 被内置 `web_fetch` 拒绝的问题，
 并支持将网页返回的 PDF 在本地提取为正文，再交给原来的 `web_fetch` 工具。
 
@@ -27,16 +27,16 @@
 在 Harness 的插件页选择安装组合包，输入这个 GitHub 安装地址：
 
 ```text
-git+https://github.com/charlesjson/dsh-web-fetch-fakeip.git#v0.2.0
+git+https://github.com/charlesjson/dsh-web-fetch-fakeip.git#v0.3.0
 ```
 
 安装并启用后重启 Harness。仓库包含 `dist/` 运行文件，安装时无需手动编译源码。
-也可以直接安装 [GitHub Release 安装包](https://github.com/charlesjson/dsh-web-fetch-fakeip/releases/download/v0.2.0/dsh-web-fetch-fakeip-0.2.0.tgz)。
+也可以直接安装 [GitHub Release 安装包](https://github.com/charlesjson/dsh-web-fetch-fakeip/releases/download/v0.3.0/dsh-web-fetch-fakeip-0.3.0.tgz)。
 
 Web 版也可以用命令行安装到 `web` profile：
 
 ```sh
-dsh plugin --profile web add "git+https://github.com/charlesjson/dsh-web-fetch-fakeip.git#v0.2.0"
+dsh plugin --profile web add "git+https://github.com/charlesjson/dsh-web-fetch-fakeip.git#v0.3.0"
 ```
 
 自定义 profile 使用其实际名称。桌面版的 `desktop` profile 由桌面应用专有管理，
@@ -54,7 +54,7 @@ npm pack
 发布前执行测试和构建，并提交更新后的 `dist/`。CI 会检查运行文件与源码构建结果是否一致。
 
 插件没有安装时执行的构建脚本，也不需要 API Key。PDF 提取需要本机安装 Poppler 的 `pdftotext`。
-其官方 peer 依赖固定为 `0.2.1-rc.2`，便于复现验证；升级 Harness 后应重新检查兼容性。
+其官方 peer 依赖固定为 `0.2.2-rc.1`，便于复现验证；升级 Harness 后应重新检查兼容性。
 
 ## 配置
 
