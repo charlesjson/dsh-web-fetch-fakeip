@@ -1,6 +1,6 @@
 {
   "name": "dsh-web-fetch-fakeip",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "DeepSeek Harness WebFetch with validated fake-IP DNS fallback and local PDF text extraction",
   "type": "module",
   "license": "MIT",
@@ -27,7 +27,7 @@
   ],
   "engines": {
     "node": ">=22.19.0",
-    "dsh": ">=0.2.2-rc.1 <0.3.0-0"
+    "dsh": ">=0.2.2-rc.1"
   },
   "dsh": {
     "bundle": {
@@ -39,14 +39,14 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "npm run build && node --experimental-test-module-mocks --test test/*.test.mjs",
     "smoke": "npm run build && node scripts/smoke.mjs",
-    "prepack": "node --test test/compatibility.test.mjs && npm run build"
+    "prepack": "npm run build && node --test test/compatibility.test.mjs test/host-api.test.mjs"
   },
   "peerDependencies": {
-    "@deepseek-ai/cordis": "~4.1.0",
-    "@deepseek-ai/dsh-web": ">=0.2.2-rc.1 <0.3.0-0",
-    "@deepseek-ai/dsh-web-fetch-http": ">=0.2.2-rc.1 <0.3.0-0",
-    "@deepseek-ai/dsh-timeout": ">=0.2.2-rc.1 <0.3.0-0",
-    "@deepseek-ai/dsh-http-proxy": ">=0.2.2-rc.1 <0.3.0-0"
+    "@deepseek-ai/cordis": ">=4.1.0",
+    "@deepseek-ai/dsh-web": ">=0.2.2-rc.1",
+    "@deepseek-ai/dsh-web-fetch-http": ">=0.2.2-rc.1",
+    "@deepseek-ai/dsh-timeout": ">=0.2.2-rc.1",
+    "@deepseek-ai/dsh-http-proxy": ">=0.2.2-rc.1"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "~3.19.0",

@@ -5,8 +5,8 @@ import { evaluatePluginCompatibility } from '@deepseek-ai/dsh-app-boot'
 
 const manifest = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'))
 
-// DSH includes prereleases when matching ranges, including at the upper bound.
-for (const version of ['0.2.2-rc.1', '0.2.2-rc.2', '0.2.2-rc.99', '0.2.2', '0.2.3-rc.1', '0.2.9']) {
+// DSH includes prereleases; future release numbers alone must not disable the plugin.
+for (const version of ['0.2.2-rc.1', '0.2.2-rc.2', '0.2.2-rc.99', '0.2.2', '0.2.3-rc.1', '0.2.9', '0.3.0-alpha.1', '0.3.0-rc.1', '0.3.0', '1.0.0', '2.1.0-rc.1', '99.0.0']) {
   test(`DSH ${version} admits the plugin without an exemption`, () => {
     assert.equal(evaluatePluginCompatibility(manifest, {}, version), undefined)
     const { engines, ...peersOnly } = manifest
@@ -14,7 +14,7 @@ for (const version of ['0.2.2-rc.1', '0.2.2-rc.2', '0.2.2-rc.99', '0.2.2', '0.2.
   })
 }
 
-for (const version of ['0.2.2-alpha.1', '0.3.0-alpha.1', '0.3.0-rc.1', '0.3.0', '1.0.0']) {
+for (const version of ['0.2.2-alpha.1']) {
   test(`DSH ${version} remains outside the compatibility range`, () => {
     const issue = evaluatePluginCompatibility(manifest, {}, version)
     assert.ok(issue)

@@ -1,3 +1,4 @@
+import { assertHostMethods } from './host-api.js'
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
 import { DEFAULT_USER_AGENT } from '@deepseek-ai/dsh-web-fetch-http'
@@ -34,6 +35,8 @@ export const Config: z<Config> = z.object({
 })
 
 export function apply(ctx: Context, config: Config): void {
+  assertHostMethods('dsh-web-fetch-fakeip', ctx, ['web.registerFetchProvider'])
+
   for (const field of ['maxResponseBytes', 'maxBodyChars', 'timeoutMs'] as const) {
     if (!Number.isFinite(config[field]) || config[field] <= 0) {
       throw new Error(`web-fetch-fakeip: ${field} must be a positive finite number`)

@@ -1,3 +1,4 @@
+import { assertHostMethods } from './host-api.js';
 import z from '@deepseek-ai/schemastery';
 import { DEFAULT_USER_AGENT } from '@deepseek-ai/dsh-web-fetch-http';
 import { HttpFetchProvider } from './vendor/provider.js';
@@ -22,6 +23,7 @@ export const Config = z.object({
     maxPdfBytes: z.number().default(DEFAULT_PDF_OPTIONS.maxPdfBytes),
 });
 export function apply(ctx, config) {
+    assertHostMethods('dsh-web-fetch-fakeip', ctx, ['web.registerFetchProvider']);
     for (const field of ['maxResponseBytes', 'maxBodyChars', 'timeoutMs']) {
         if (!Number.isFinite(config[field]) || config[field] <= 0) {
             throw new Error(`web-fetch-fakeip: ${field} must be a positive finite number`);
